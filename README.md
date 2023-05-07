@@ -28,3 +28,8 @@ python export_ig.py --input_path "*.jpg" --output_folder padded/ \
 * `pad`: amount (in pixels) to pad.
 * `n_jobs`: how many threads to use.
 
+# Examples
+
+Before                       |  After
+:---------------------------:|:-------------------------------:
+![taxi](imgs/taxi.jpg)       | ![padded](imgs/taxi-padded.jpg)
