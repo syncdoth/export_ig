@@ -101,6 +101,7 @@ def add_padding(image: Image,
 
 def main(input_path,
          output_folder,
+         subfoloder=True,
          aspect_ratio="4x5",
          shadow_offset=33,
          pad=100,
@@ -116,6 +117,8 @@ def main(input_path,
         raise ValueError("No files found")
 
     aspect_ratio = tuple(int(x) for x in aspect_ratio.replace(" ", "").lower().split("x"))
+    if subfoloder:
+        output_folder = os.path.join(os.path.dirname(input_path), output_folder)
     os.makedirs(output_folder, exist_ok=True)
 
     def _process_image(input_file_path):
