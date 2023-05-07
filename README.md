@@ -11,9 +11,10 @@ python export_ig.py --input_path "*.jpg" --output_folder padded/ \
     --n_jobs 10
 ```
 
-* `input_path`: glob string for input files.
+* `input_path`: glob string for input files. When using wildcard (*), make sure to
+                wrap it in quotes so that it does not get expanded by bash.
 * `output_folder`: folder to contain processed images.
-* `aspect_ratio`: aspect ratio of output image. Auto adjusted for portrait and landscape.
+* `aspect_ratio`: aspect ratio of output image. Auto adjusted for portrait and landscape. Should be separated by "x".
 * `shadow_offset`: offset for shadow (in pixels). negative number leads to shadow on top-left diagonal of the image.
 * `radius`: blur radius for the shadow.
 * `shadow_color`: can be either hex string value (with or without #) or color names in {white, black, gray}
