@@ -102,12 +102,15 @@ def add_padding(image: Image,
 def main(input_path,
          output_folder,
          aspect_ratio="4x5",
-         shadow_offset=34,
+         shadow_offset=33,
          pad=100,
-         radius=12,
+         radius=15,
          bg_color="white",
          shadow_color="gray",
          n_jobs=10):
+    if os.path.isdir(input_path):
+        input_path = os.path.join(input_path, "*")
+
     files = [f for f in glob.glob(input_path) if not os.path.isdir(f)]
     if len(files) == 0:
         raise ValueError("No files found")
