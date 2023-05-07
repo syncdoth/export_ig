@@ -29,7 +29,7 @@ def make_shadow(image: Image,
                 border: int,
                 bg_color: str,
                 shadow_color: str,
-                radius=10):
+                radius: int = 10):
     """
     image: base image to give a drop shadow
     iterations: number of times to apply the blur filter to the shadow
@@ -99,16 +99,16 @@ def add_padding(image: Image,
     return canvas
 
 
-def main(input_path,
-         output_folder,
-         subfoloder=True,
-         aspect_ratio="4x5",
-         shadow_offset=33,
-         pad=100,
-         radius=15,
-         bg_color="white",
-         shadow_color="gray",
-         n_jobs=10):
+def main(input_path: str,
+         output_folder: str,
+         subfoloder: bool = True,
+         aspect_ratio: str = "4x5",
+         shadow_offset: int = 33,
+         pad: int = 100,
+         radius: int = 15,
+         bg_color: str = "white",
+         shadow_color: str = "gray",
+         n_jobs: int = 10):
     if os.path.isdir(input_path):
         input_path = os.path.join(input_path, "*")
 
