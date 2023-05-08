@@ -9,8 +9,18 @@ from .color_utils import parse_hex_color
 class ShadowPadOptions:
     aspect_ratio: str = field(
         default="4x5", metadata={"help": "Aspect ratio of the output image. Separated by `x`"})
-    shadow_offset: int = field(default=33, metadata={"help": "Offset of the shadow (in pixels))"})
-    pad: int = field(default=100, metadata={"help": "Padding around the image (in pixels)"})
+    shadow_offset: int | float = field(
+        default=33,
+        metadata={
+            "help": "Offset of the shadow (in pixels))."
+                    "if float, it is a ratio of the longer side of the image instead."
+        })
+    pad: int | float = field(
+        default=100,
+        metadata={
+            "help": "Padding around the image (in pixels)."
+                    "if float, it is a ratio of the longer side of the image instead."
+        })
     radius: int = field(default=15, metadata={"help": "Radius of the shadow blur"})
     bg_color: str = field(default="white",
                           metadata={"help": "Background color of the output image"})
@@ -40,8 +50,8 @@ def shadow_pad(args: ShadowPadOptions):
 
 
 def make_shadow(image: Image,
-                offset: tuple[int],
-                border: int,
+                offset: tuple[int | float],
+                border: int | float,
                 bg_color: str,
                 shadow_color: str,
                 radius: int = 10):
@@ -54,8 +64,13 @@ def make_shadow(image: Image,
     """
 
     #Calculate the size of the shadow's image
-    full_width = image.size[0] + abs(offset[0]) + border
-    full_height = image.size[1] + abs(offset[1]) + border
+    width, height = image.size
+    if isinstance(offset[0], float):
+        offset = (int(offset[0] * width), int(offset[1] * height))
+    if isinstance(border, float):
+        border = int(border * max(width, height))
+    full_width = width + abs(offset[0]) + border
+    full_height = height + abs(offset[1]) + border
 
     # parse colors
     bg_color = parse_hex_color(bg_color)
@@ -89,16 +104,22 @@ def add_padding(image: Image,
     width, height = image.size
     if width > height:
         # landscape
+        if isinstance(pad, float):
+            pad = int(pad * width)
         new_width = width + 2 * pad
         new_height = int(new_width / aspect_ratio[1] * aspect_ratio[0])
         image_pos = (pad, int((new_height - height) / 2))
     elif width < height:
         # portrait
+        if isinstance(pad, float):
+            pad = int(pad * height)
         new_height = height + 2 * pad
         new_width = int(new_height / aspect_ratio[1] * aspect_ratio[0])
         image_pos = (int((new_width - width) / 2), pad)
     else:
         #square
+        if isinstance(pad, float):
+            pad = int(pad * height)
         new_width = width + 2 * pad
         new_height = height + 2 * pad
 
