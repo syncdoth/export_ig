@@ -20,7 +20,7 @@ setup(
     ]),
     install_requires=[
         "Pillow",
-        "joblib",
+        "joblib>=1.2.0",
         "simple-parsing",
     ],
     entry_points={"console_scripts": ["export_ig=export_ig.export_ig:main"]},
