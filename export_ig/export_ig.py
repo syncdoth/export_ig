@@ -1,9 +1,10 @@
+from dataclasses import dataclass, field
 import glob
 import os
 
-import fire
 from joblib import Parallel, delayed
 from PIL import Image, ImageFilter
+import simple_parsing
 
 from .color_utils import parse_hex_color
 
@@ -83,51 +84,58 @@ def add_padding(image: Image,
     return canvas
 
 
-def main(input_path: str,
-         output_folder: str,
-         subfoloder: bool = True,
-         aspect_ratio: str = "4x5",
-         shadow_offset: int = 33,
-         pad: int = 100,
-         radius: int = 15,
-         bg_color: str = "white",
-         shadow_color: str = "gray",
-         n_jobs: int = 10):
-    if os.path.isdir(input_path):
+@dataclass
+class Options:
+    input_path: str = field(metadata={"help": "Path to the image or folder of images to process"})
+    output_folder: str = field(metadata={"help": "Path to the output folder"})
+    subfoloder: bool = field(
+        default=True, metadata={"help": "Whether to create a subfolder in the output folder"})
+    aspect_ratio: str = field(
+        default="4x5", metadata={"help": "Aspect ratio of the output image. Separated by `x`"})
+    shadow_offset: int = field(default=33, metadata={"help": "Offset of the shadow (in pixels))"})
+    pad: int = field(default=100, metadata={"help": "Padding around the image (in pixels)"})
+    radius: int = field(default=15, metadata={"help": "Radius of the shadow blur"})
+    bg_color: str = field(default="white",
+                          metadata={"help": "Background color of the output image"})
+    shadow_color: str = field(default="gray", metadata={"help": "Shadow color"})
+    n_jobs: int = field(default=10, metadata={"help": "Number of jobs to run in parallel"})
+
+
+def main():
+    args = simple_parsing.parse(Options)
+
+    input_path = args.input_path
+    if os.path.isdir(args.input_path):
         input_path = os.path.join(input_path, "*")
 
     files = [f for f in glob.glob(input_path) if not os.path.isdir(f)]
     if len(files) == 0:
         raise ValueError("No files found")
 
-    aspect_ratio = tuple(int(x) for x in aspect_ratio.replace(" ", "").lower().split("x"))
-    if subfoloder:
+    aspect_ratio = tuple(int(x) for x in args.aspect_ratio.replace(" ", "").lower().split("x"))
+    if args.subfoloder:
         output_folder = os.path.join(os.path.dirname(input_path), output_folder)
     os.makedirs(output_folder, exist_ok=True)
 
     def _process_image(input_file_path):
         image = Image.open(input_file_path)
-        shadowed = make_shadow(image, (shadow_offset, shadow_offset),
-                               shadow_offset,
-                               bg_color,
-                               shadow_color,
-                               radius=radius)
+        shadowed = make_shadow(image, (args.shadow_offset, args.shadow_offset),
+                               args.shadow_offset,
+                               args.bg_color,
+                               args.shadow_color,
+                               radius=args.radius)
         padded = add_padding(image,
-                             pad,
+                             args.pad,
                              image_to_paste=shadowed,
                              aspect_ratio=aspect_ratio,
-                             bg_color=bg_color)
+                             bg_color=args.bg_color)
         basename = os.path.basename(input_file_path)
         fname, ext = os.path.splitext(basename)
         out_fname = os.path.join(output_folder, fname + "-padded" + ext)
         padded.save(out_fname)
 
-    Parallel(n_jobs=n_jobs)(delayed(_process_image)(fname) for fname in files)
-
-
-def run():
-    fire.Fire(main)
+    Parallel(n_jobs=args.n_jobs)(delayed(_process_image)(fname) for fname in files)
 
 
 if __name__ == '__main__':
-    run()
+    main()
