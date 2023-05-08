@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="export_ig",
-    version="1.0.2",
+    version="1.0.3",
     description="Package for processing images for Instagram upload.",
     # pylint: disable-next=consider-using-with
     long_description=open("README.md", "r", encoding="utf-8").read(),
