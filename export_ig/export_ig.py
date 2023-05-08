@@ -5,7 +5,7 @@ import fire
 from joblib import Parallel, delayed
 from PIL import Image, ImageFilter
 
-from color_utils import parse_hex_color
+from .color_utils import parse_hex_color
 
 
 def make_shadow(image: Image,
@@ -125,5 +125,9 @@ def main(input_path: str,
     Parallel(n_jobs=n_jobs)(delayed(_process_image)(fname) for fname in files)
 
 
-if __name__ == '__main__':
+def run():
     fire.Fire(main)
+
+
+if __name__ == '__main__':
+    run()

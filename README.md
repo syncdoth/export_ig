@@ -7,11 +7,13 @@ Add padding around image, drop shadows.
 Install packages.
 
 ```bash
-pip install -r requirements.txt
+pip install export_ig
 ```
 
+## Run
+
 ```bash
-python export_ig.py --input_path "*.jpg" --output_folder padded/ --subfolder \
+export_ig --input_path "*.jpg" --output_folder padded/ --subfolder \
     --aspect_ratio 4x5 --shadow_offset 32 --radius 12 --shadow_color gray \
     --pad 100 --bg_color white \
     --n_jobs 10
