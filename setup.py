@@ -4,7 +4,8 @@ setup(
     name="export_ig",
     version="1.0.1",
     description="Package for processing images for Instagram upload.",
-    long_description=open("README.md").read(),
+    # pylint: disable-next=consider-using-with
+    long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     classifiers=[
         "Programming Language :: Python :: 3",
