@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Union
 
 from PIL import Image, ImageFilter
 
@@ -9,13 +10,13 @@ from .color_utils import parse_hex_color
 class ShadowPadOptions:
     aspect_ratio: str = field(
         default="4x5", metadata={"help": "Aspect ratio of the output image. Separated by `x`"})
-    shadow_offset: int | float = field(
+    shadow_offset: Union[int, float] = field(
         default=33,
         metadata={
             "help": "Offset of the shadow (in pixels))."
                     "if float, it is a ratio of the longer side of the image instead."
         })
-    pad: int | float = field(
+    pad: Union[int, float] = field(
         default=100,
         metadata={
             "help": "Padding around the image (in pixels)."
@@ -50,8 +51,8 @@ def shadow_pad(args: ShadowPadOptions):
 
 
 def make_shadow(image: Image,
-                offset: tuple[int | float],
-                border: int | float,
+                offset: tuple[Union[int, float]],
+                border: Union[int, float],
                 bg_color: str,
                 shadow_color: str,
                 radius: int = 10):
