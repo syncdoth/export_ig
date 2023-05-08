@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 setup(
     name="export_ig",
-    version="1.0.1",
+    version="1.0.2",
     description="Package for processing images for Instagram upload.",
     # pylint: disable-next=consider-using-with
     long_description=open("README.md", "r", encoding="utf-8").read(),
@@ -10,7 +10,7 @@ setup(
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
-    url="https://instagram.com/synch.poto",
+    url="https://github.com/syncdoth/export_ig",
     author="Sehyun Choi",
     author_email="choisehyun98@gmail.com",
     license="Apache",
